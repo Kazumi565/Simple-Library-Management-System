@@ -1,59 +1,100 @@
-import java.util.ArrayList;
+import java.util.Scanner;
 
-class Carte {
-    private String titlu;
-    private String autor;
-    private String ISBN;
+class Book {
+    String title;
+    String author;
+    String isbn;
 
-    public Carte(String titlu, String autor, String ISBN) {
-        this.titlu = titlu;
-        this.autor = autor;
-        this.ISBN = ISBN;
-    }
-
-    public String getInfo() {
-        return "Titlu: " + titlu + ", Autor: " + autor + ", ISBN: " + ISBN;
+    public Book(String title, String author, String isbn) {
+        this.title = title;
+        this.author = author;
+        this.isbn = isbn;
     }
 }
 
-class Biblioteca {
-    private ArrayList<Carte> listaCarti;
+class Library {
+    ArrayList<Book> books;
 
-    public Biblioteca() {
-        this.listaCarti = new ArrayList<>();
+    public Library() {
+        this.books = new ArrayList<>();
     }
 
-    public void adaugaCarte(Carte carte) {
-        listaCarti.add(carte);
+    public void addBook(Book book) {
+        books.add(book);
     }
 
-    public void scoateCarte(Carte carte) {
-        listaCarti.remove(carte);
+    public void removeBook(Book book) {
+        books.remove(book);
     }
 
-    public void afiseazaCarti() {
-        for (Carte carte : listaCarti) {
-            System.out.println(carte.getInfo());
+    public void displayBooks() {
+        for (Book book : books) {
+            System.out.println("Title: " + book.title + ", Author: " + book.author + ", ISBN: " + book.isbn);
         }
     }
 }
 
-public class Main {
+public class LibraryManagementSystem {
     public static void main(String[] args) {
-        Carte carte1 = new Carte("Alchimistul", "Paulo Coelho", "9780061122415");
-        Carte carte2 = new Carte("Pelerinajul", "Paulo Coelho", "9780061687457");
+        Scanner scanner = new Scanner(System.in);
+        Library library = new Library();
 
-        Biblioteca biblioteca = new Biblioteca();
+        while (true) {
+            System.out.println("Choose an action:");
+            System.out.println("1. Add a book");
+            System.out.println("2. Remove a book");
+            System.out.println("3. Display all books");
+            System.out.println("4. Exit");
 
-        biblioteca.adaugaCarte(carte1);
-        biblioteca.adaugaCarte(carte2);
+            int choice = scanner.nextInt();
 
-        System.out.println("Cărți în bibliotecă:");
-        biblioteca.afiseazaCarti();
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter book details:");
+                    System.out.print("Title: ");
+                    String title = scanner.next();
+                    System.out.print("Author: ");
+                    String author = scanner.next();
+                    System.out.print("ISBN: ");
+                    String isbn = scanner.next();
 
-        biblioteca.scoateCarte(carte1);
+                    Book newBook = new Book(title, author, isbn);
+                    library.addBook(newBook);
+                    break;
 
-        System.out.println("\nDupă eliminarea unei cărți:");
-        biblioteca.afiseazaCarti();
+                case 2:
+                    System.out.println("Enter ISBN of the book to remove:");
+                    String isbnToRemove = scanner.next();
+                    Book bookToRemove = null;
+
+                    for (Book book : library.books) {
+                        if (book.isbn.equals(isbnToRemove)) {
+                            bookToRemove = book;
+                            break;
+                        }
+                    }
+
+                    if (bookToRemove != null) {
+                        library.removeBook(bookToRemove);
+                        System.out.println("Book removed successfully.");
+                    } else {
+                        System.out.println("Book not found.");
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Books in the library:");
+                    library.displayBooks();
+                    break;
+
+                case 4:
+                    System.out.println("Exiting the Library Management System.");
+                    System.exit(0);
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please choose a valid action.");
+            }
+        }
     }
 }
